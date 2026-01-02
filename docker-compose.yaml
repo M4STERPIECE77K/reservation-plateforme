@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: reservation-postgres
+    environment:
+      POSTGRES_DB: reservationdb
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: reservation_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - reservation-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: reservation-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reservationdb
+      SPRING_DATASOURCE_USERNAME: reservation_user
+      SPRING_DATASOURCE_PASSWORD: reservation_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "true"
+      SERVER_PORT: 8089
+    depends_on:
+      - postgres
+    ports:
+      - "8089:8089"
+    networks:
+      - reservation-net
+
+volumes:
+  postgres_data:
+
+networks:
+  reservation-net:
+    driver: bridge

@@ -1,0 +1,40 @@
+<!-- Sidebar -->
+<aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col">
+  <div class="p-6 flex items-center gap-2">
+    <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+      <span class="iconify" data-icon="lucide:command" data-width="16"></span>
+    </div>
+    <span class="text-sm font-semibold text-slate-900 tracking-tight">Reservo</span>
+  </div>
+
+  <nav class="flex-1 px-4 space-y-1">
+    <button (click)="onNavigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-primary-600 bg-primary-50 transition-colors">
+      <span class="iconify" data-icon="lucide:layout-dashboard" data-width="18" data-stroke-width="1.5"></span>
+      Dashboard
+    </button>
+    <button (click)="onNavigate('services')" id="nav-services" class="nav-item w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+      <span class="iconify" data-icon="lucide:grid-2x2" data-width="18" data-stroke-width="1.5"></span>
+      Browse Services
+    </button>
+    <button (click)="onNavigate('reservations')" id="nav-reservations" class="nav-item w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+      <span class="iconify" data-icon="lucide:calendar-days" data-width="18" data-stroke-width="1.5"></span>
+      My Reservations
+    </button>
+  </nav>
+
+  <div class="p-4 border-t border-slate-100">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+        <img src="https://ui-avatars.com/api/?name=Alex+Doe&amp;background=random" alt="Avatar" class="w-full h-full object-cover">
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-slate-900 truncate">Alex Doe</p>
+        <p class="text-xs text-slate-500 truncate">alex&#64;example.com</p>
+      </div>
+      <button (click)="onLogout()" class="text-slate-400 hover:text-slate-600">
+        <span class="iconify" data-icon="lucide:log-out" data-width="16"></span>
+      </button>
+    </div>
+  </div>
+</aside>
+

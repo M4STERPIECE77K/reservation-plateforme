@@ -1,0 +1,9 @@
+/* Minimal styles, most classes used are Tailwind-like utilities defined elsewhere */
+.login-page { background-color: #f8fafc; }
+.login-card { background: #fff; }
+
+/* Basic responsive */
+@media (max-width: 640px) {
+  .login-card { padding: 1.25rem; margin: 1rem; }
+}
+

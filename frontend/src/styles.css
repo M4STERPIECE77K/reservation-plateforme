@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+/* styles.css ou app.css */
+:root {
+  /* Palette principale */
+  --primary: #11d4b4;
+  --primary-light: #4af0d4;
+  --primary-dark: #0fa98d;
+
+  /* Couleurs de fond */
+  --background-light: #f8fcfb;
+  --background-dark: #0a1f1c;
+  --surface-light: #ffffff;
+  --surface-dark: #132623;
+
+  /* Couleurs de texte */
+  --text-main: #0a1f1c;
+  --text-muted: #6b8c88;
+  --text-light: #dbe6e4;
+
+  /* Bordures */
+  --border-light: #dbe6e4;
+  --border-dark: #2a403d;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Manrope', sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-main);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--background-dark);
+    color: white;
+  }
+}
+
+/* Animation pour le composant login */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
