@@ -28,6 +28,5 @@ export class LoginComponent {
 
   onSubmit() {
     console.log('Form submitted:', this.authMode, this.model);
-    // Logic for login or registration
   }
 }
