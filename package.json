@@ -1,0 +1,12 @@
+{
+    "name": "reservation-management",
+    "version": "1.0.0",
+    "description": "Système de gestion de réservation - Commandes globales",
+    "scripts": {
+        "start": "npx concurrently --kill-others \"npm start --prefix frontend\" \"npm run start:backend\"",
+        "start:frontend": "npm start --prefix frontend",
+        "start:backend": "set \"JAVA_HOME=C:\\Users\\M4STERPIECE\\.jdks\\ms-21.0.9\" && cd backend && .\\gradlew bootRun -x test",
+        "docker:up": "docker compose up -d",
+        "docker:down": "docker compose down"
+    }
+}

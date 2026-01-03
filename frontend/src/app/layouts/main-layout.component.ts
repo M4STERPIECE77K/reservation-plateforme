@@ -18,5 +18,5 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
     </div>
   `
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent { }
 

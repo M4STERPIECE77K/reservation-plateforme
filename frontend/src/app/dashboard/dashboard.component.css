@@ -1,6 +1,3 @@
-/* Styles locaux éventuels. Tailwind gère la majorité des classes. */
 :host {
   display: block;
 }
-/* ...existing code... */
-

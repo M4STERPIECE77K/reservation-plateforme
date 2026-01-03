@@ -1,4 +1,4 @@
-<main class="flex-1 flex items-center justify-center p-4 relative overflow-hidden min-h-[calc(100vh-140px)]">
+<main class="flex-1 flex items-center justify-center p-4 relative overflow-hidden min-h-screen">
   <div class="absolute inset-0 z-0 pointer-events-none opacity-40">
     <div
       class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2">
@@ -39,6 +39,21 @@
         </label>
       </div>
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-5">
+        <div *ngIf="authMode === 'signup'" class="grid grid-cols-2 gap-4 animate-fade-in">
+          <label class="flex flex-col gap-2">
+            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">First Name</span>
+            <input
+              class="w-full h-12 px-4 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+              placeholder="John" required type="text" name="firstName" [(ngModel)]="model.firstName" />
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Last Name</span>
+            <input
+              class="w-full h-12 px-4 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+              placeholder="Doe" required type="text" name="lastName" [(ngModel)]="model.lastName" />
+          </label>
+        </div>
+
         <label class="flex flex-col gap-2">
           <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Email Address</span>
           <div class="relative flex items-center">
@@ -50,7 +65,9 @@
         <label class="flex flex-col gap-2">
           <div class="flex justify-between items-center">
             <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Password</span>
-            <a class="text-primary text-sm font-semibold hover:underline" href="#">Forgot Password?</a>
+            <a *ngIf="authMode === 'signin'" class="text-primary text-sm font-semibold hover:underline animate-fade-in"
+              href="#">Forgot
+              Password?</a>
           </div>
           <div class="relative flex items-center">
             <input
@@ -65,11 +82,12 @@
             </button>
           </div>
         </label>
-        <button
-          class="mt-2 w-full h-12 bg-primary hover:bg-primary/90 text-text-main text-base font-bold rounded-lg transition-all shadow-[0_4px_14px_rgba(17,212,180,0.3)] flex items-center justify-center gap-2"
+        <button [disabled]="isLoading"
+          class="mt-2 w-full h-12 bg-primary hover:bg-primary/90 text-text-main text-base font-bold rounded-lg transition-all shadow-[0_4px_14px_rgba(17,212,180,0.3)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit">
-          <span>{{ authMode === 'signin' ? 'Sign In' : 'Get Started' }}</span>
-          <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          <span *ngIf="!isLoading">{{ authMode === 'signin' ? 'Sign In' : 'Get Started' }}</span>
+          <span *ngIf="isLoading" class="animate-spin rounded-full h-5 w-5 border-b-2 border-text-main"></span>
+          <span *ngIf="!isLoading" class="material-symbols-outlined text-[20px]">arrow_forward</span>
         </button>
       </form>
       <div class="relative my-8">

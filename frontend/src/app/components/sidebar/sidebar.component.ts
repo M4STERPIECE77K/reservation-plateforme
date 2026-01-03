@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,15 +9,48 @@ import { CommonModule } from '@angular/common';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Output() navigate = new EventEmitter<string>();
   @Output() logoutEvent = new EventEmitter<void>();
+
+  private authService = inject(AuthService);
+
+  isDropdownOpen = false;
+  isLogoutModalOpen = false;
+
+  userName = 'User Profile';
+  userEmail = 'user@example.com';
+
+  ngOnInit() {
+    const user = this.authService.getUserDetails();
+    if (user) {
+      this.userName = user.sub || 'User Profile';
+      this.userEmail = user.sub || 'user@example.com';
+    }
+  }
 
   onNavigate(route: string) {
     this.navigate.emit(route);
   }
 
-  onLogout() {
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
+  openLogoutModal() {
+    this.isDropdownOpen = false;
+    this.isLogoutModalOpen = true;
+  }
+
+  closeLogoutModal() {
+    this.isLogoutModalOpen = false;
+  }
+
+  confirmLogout() {
+    this.isLogoutModalOpen = false;
     this.logoutEvent.emit();
   }
 }
