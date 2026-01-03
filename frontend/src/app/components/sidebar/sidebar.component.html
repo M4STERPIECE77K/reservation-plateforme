@@ -1,27 +1,31 @@
 <aside
   class="w-64 bg-surface-light dark:bg-surface-dark border-r border-[#f0f2f4] dark:border-gray-800 flex-col justify-between hidden md:flex h-screen sticky top-0">
   <div class="flex flex-col gap-4 p-4">
-    <div class="flex items-center gap-3 px-2 py-4">
-      <div class="bg-primary/10 flex items-center justify-center rounded-lg size-10 text-primary">
-        <span class="material-symbols-outlined fill">bookmark</span>
+    <div class="flex items-center gap-3 px-2 py-4 logo-sidebar">
+      <div class="size-8 text-primary">
+        <svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M44 11.2727C44 14.0109 39.8386 16.3957 33.69 17.6364C39.8386 18.877 44 21.2618 44 24C44 26.7382 39.8386 29.123 33.69 30.3636C39.8386 31.6043 44 33.9891 44 36.7273C44 40.7439 35.0457 44 24 44C12.9543 44 4 40.7439 4 36.7273C4 33.9891 8.16144 31.6043 14.31 30.3636C8.16144 29.123 4 26.7382 4 24C4 21.2618 8.16144 18.877 14.31 17.6364C8.16144 16.3957 4 14.0109 4 11.2727C4 7.25611 12.9543 4 24 4C35.0457 4 44 7.25611 44 11.2727Z"
+            fill="currentColor"></path>
+        </svg>
       </div>
-      <h1 class="text-text-main dark:text-white text-xl font-bold leading-normal tracking-tight">ServiceBook</h1>
+      <h2 class="text-xl font-bold tracking-tight text-text-main dark:text-white">Reservation</h2>
     </div>
     <nav class="flex flex-col gap-2 mt-2">
-      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary group transition-colors cursor-pointer"
-        (click)="onNavigate('dashboard')">
+      <a routerLink="/app" routerLinkActive="bg-primary/10 text-primary" [routerLinkActiveOptions]="{exact: true}"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined fill text-[22px]">dashboard</span>
         <p class="text-sm font-semibold leading-normal">Dashboard</p>
       </a>
-      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer"
-        (click)="onNavigate('bookings')">
-        <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-        <p class="text-sm font-medium leading-normal">My Bookings</p>
-      </a>
-      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer"
-        (click)="onNavigate('services')">
+      <a routerLink="/services" routerLinkActive="bg-primary/10 text-primary"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined text-[22px]">storefront</span>
         <p class="text-sm font-medium leading-normal">Browse Services</p>
+      </a>
+      <a routerLink="/bookings" routerLinkActive="bg-primary/10 text-primary"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
+        <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+        <p class="text-sm font-medium leading-normal">My Bookings</p>
       </a>
     </nav>
   </div>
