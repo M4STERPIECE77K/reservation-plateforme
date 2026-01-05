@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
+import { NavbarComponent } from '../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SidebarComponent, CommonModule],
+  imports: [SidebarComponent, NavbarComponent, CommonModule],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
