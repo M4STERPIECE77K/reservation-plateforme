@@ -53,7 +53,7 @@
     <div *ngIf="isDropdownOpen"
       class="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-surface-dark rounded-xl shadow-lg border border-[#f0f2f4] dark:border-gray-700 overflow-hidden z-50 animate-fade-in">
       <div class="py-1">
-        <button
+        <button routerLink="/profile" (click)="isDropdownOpen = false"
           class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
           <span class="material-symbols-outlined text-[20px]">person</span>
           Profile

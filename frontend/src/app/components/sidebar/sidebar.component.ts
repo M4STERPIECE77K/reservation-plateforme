@@ -26,8 +26,8 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     const user = this.authService.getUserDetails();
     if (user) {
-      this.userName = user.sub || 'User Profile';
-      this.userEmail = user.sub || 'user@example.com';
+      this.userName = user.firstName || 'User Profile';
+      this.userEmail = user.sub || '';
     }
   }
 

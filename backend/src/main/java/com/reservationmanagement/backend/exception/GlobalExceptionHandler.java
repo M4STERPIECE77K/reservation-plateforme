@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +29,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneralException(Exception ex) {
+        ex.printStackTrace();
         Map<String, String> errors = new HashMap<>();
-        errors.put("message", "Une erreur interne est survenue");
+        errors.put("message", "Erreur interne: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, String>> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Le fichier est trop volumineux. La taille maximum autorisée est de 10MB.");
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(errors);
     }
 }
