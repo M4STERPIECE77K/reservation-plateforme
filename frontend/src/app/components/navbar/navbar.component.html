@@ -1,0 +1,39 @@
+<header
+    class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#f0f2f4] dark:border-gray-800 bg-surface-light dark:bg-surface-dark px-8 py-4 z-10 shrink-0">
+    <div class="flex items-center gap-8 w-full max-w-2xl">
+        <div class="flex items-center gap-4 text-text-main dark:text-white md:hidden">
+            <button class="text-text-main dark:text-white">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+        <h2 class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] md:hidden">
+            {{ pageTitle }}</h2>
+        <label class="hidden md:flex flex-col w-full max-w-md h-10">
+            <div
+                class="flex w-full flex-1 items-center rounded-lg h-full ring-1 ring-[#dbdfe6] dark:ring-gray-700 focus-within:ring-2 focus-within:ring-primary transition-all px-3">
+                <span class="material-symbols-outlined text-[20px] text-[#616f89] dark:text-gray-400">search</span>
+                <input
+                    class="flex w-full min-w-0 flex-1 resize-none overflow-hidden text-text-main dark:text-white bg-transparent h-full placeholder:text-[#616f89] dark:placeholder:text-gray-500 pl-2 pr-3 text-sm font-normal leading-normal border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus:border-0"
+                    [placeholder]="searchPlaceholder" />
+
+            </div>
+        </label>
+    </div>
+    <div class="flex flex-1 justify-end gap-3 md:gap-6 items-center">
+        <button (click)="toggleTheme()"
+            class="flex items-center justify-center text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">
+                {{ themeService.isDarkMode() ? 'dark_mode' : 'light_mode' }}
+            </span>
+        </button>
+        <button
+            class="flex items-center justify-center text-text-secondary dark:text-gray-400 hover:text-primary transition-colors relative">
+            <span class="material-symbols-outlined">notifications</span>
+            <span
+                class="absolute top-0 right-0 size-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-dark transform translate-x-1/4 -translate-y-1/4"></span>
+        </button>
+        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-gray-200 dark:border-gray-700 cursor-pointer md:hidden"
+            style='background-image: url("https://ui-avatars.com/api/?name=User+Profile");'>
+        </div>
+    </div>
+</header>

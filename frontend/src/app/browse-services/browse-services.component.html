@@ -2,47 +2,9 @@
     class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 min-h-screen flex overflow-hidden">
     <app-sidebar (navigate)="onNavigate($event)" (logoutEvent)="onLogout()"></app-sidebar>
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-        <header
-            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#f0f2f4] dark:border-gray-800 bg-surface-light dark:bg-surface-dark px-8 py-4 z-10 shrink-0">
-            <div class="flex items-center gap-8 w-full max-w-2xl">
-                <div class="flex items-center gap-4 text-text-main dark:text-white md:hidden">
-                    <button class="text-text-main dark:text-white">
-                        <span class="material-symbols-outlined">menu</span>
-                    </button>
-                </div>
-                <h2
-                    class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] md:hidden">
-                    Services</h2>
-                <label class="hidden md:flex flex-col w-full max-w-md h-10">
-                    <div
-                        class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-[#dbdfe6] dark:ring-gray-700 focus-within:ring-2 focus-within:ring-primary transition-all">
-                        <div
-                            class="text-[#616f89] dark:text-gray-400 flex border-none bg-transparent items-center justify-center pl-3">
-                            <span class="material-symbols-outlined text-[20px]">search</span>
-                        </div>
-                        <input
-                            class="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-main dark:text-white focus:outline-none bg-transparent h-full placeholder:text-[#616f89] dark:placeholder:text-gray-500 px-3 text-sm font-normal leading-normal"
-                            placeholder="Search treatments..." />
-                    </div>
-                </label>
-            </div>
-            <div class="flex flex-1 justify-end gap-6 items-center">
-                <button
-                    class="flex items-center justify-center text-text-secondary dark:text-gray-400 hover:text-primary transition-colors relative">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span
-                        class="absolute top-0 right-0 size-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-dark transform translate-x-1/4 -translate-y-1/4"></span>
-                </button>
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-gray-200 dark:border-gray-700 cursor-pointer md:hidden"
-                    style='background-image: url("https://ui-avatars.com/api/?name=User+Profile");'>
-                </div>
-            </div>
-        </header>
-
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-10">
+        <app-navbar [pageTitle]="'Services'" [searchPlaceholder]="'Search treatments...'"></app-navbar>
+        <div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-10 animate-slide-up">
             <div class="max-w-7xl mx-auto flex flex-col gap-12">
-                <!-- Header Section -->
                 <div class="flex flex-col gap-8">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                         <div class="max-w-2xl">
@@ -50,13 +12,10 @@
                                 class="text-4xl md:text-5xl font-black tracking-tight mb-3 text-text-main dark:text-white">
                                 Our Services</h1>
                             <p class="text-text-secondary dark:text-gray-400 text-lg leading-relaxed">
-                                Discover our range of professional hair treatments designed to help you look and feel
-                                your absolute best.
+                                Discover our range of professional services designed to help you with your daily needs.
                             </p>
                         </div>
                     </div>
-
-                    <!-- Filter Chips -->
                     <div class="flex flex-wrap gap-3 pb-2 border-b border-[#f0f2f4] dark:border-gray-800/50">
                         <button *ngFor="let cat of categories" (click)="setActiveCategory(cat)"
                             [ngClass]="activeCategory === cat ? 
@@ -67,10 +26,8 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Service Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    <div *ngFor="let service of services"
+                    <div *ngFor="let service of filteredServices"
                         class="group flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-primary/10 border border-[#dbdfe6] dark:border-gray-800 hover:border-primary/20 transition-all duration-300">
                         <div class="relative h-56 w-full overflow-hidden">
                             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -97,7 +54,7 @@
                                     <span class="text-lg font-bold text-text-main dark:text-white">{{ service.price
                                         }}</span>
                                 </div>
-                                <button
+                                <button (click)="viewServiceDetail(service.id)"
                                     class="h-10 px-6 bg-gray-50 dark:bg-gray-800 hover:bg-primary hover:text-text-main text-text-main dark:text-white text-sm font-bold rounded-lg transition-colors duration-200">
                                     Book Now
                                 </button>
