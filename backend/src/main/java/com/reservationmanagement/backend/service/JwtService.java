@@ -1,5 +1,6 @@
 package com.reservationmanagement.backend.service;
 
+import com.reservationmanagement.backend.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -33,7 +34,14 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof User user) {
+            claims.put("firstName", user.getFirstName());
+            claims.put("lastName", user.getLastName());
+            claims.put("phoneNumber", user.getPhoneNumber());
+            claims.put("profileImageUrl", user.getProfileImageUrl());
+        }
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -47,8 +55,7 @@ public class JwtService {
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
-            long expiration
-    ) {
+            long expiration) {
         return Jwts
                 .builder()
                 .claims(extraClaims)

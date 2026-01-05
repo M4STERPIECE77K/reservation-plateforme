@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 
 export interface AuthResponse {
     token: string;
@@ -39,6 +39,20 @@ export class AuthService {
 
     getToken(): string | null {
         return localStorage.getItem('auth_token');
+    }
+
+    private profileImageSubject = new BehaviorSubject<string>('');
+    profileImage$ = this.profileImageSubject.asObservable();
+
+    constructor() {
+        const user = this.getUserDetails();
+        if (user && user.profileImageUrl) {
+            this.profileImageSubject.next(user.profileImageUrl);
+        }
+    }
+
+    updateProfileImage(url: string) {
+        this.profileImageSubject.next(url);
     }
 
     getUserDetails(): any {

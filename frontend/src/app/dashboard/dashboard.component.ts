@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
@@ -11,12 +11,20 @@ import { AuthService } from '../services/auth.service';
   imports: [SidebarComponent, NavbarComponent, CommonModule],
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  userName = 'Sarah';
-  userEmail = 'sarah.j@example.com';
+  userName = 'User';
+  userEmail = '';
+
+  ngOnInit() {
+    const user = this.authService.getUserDetails();
+    if (user) {
+      this.userName = user.firstName || 'User';
+      this.userEmail = user.sub || '';
+    }
+  }
 
   stats = [
     {
