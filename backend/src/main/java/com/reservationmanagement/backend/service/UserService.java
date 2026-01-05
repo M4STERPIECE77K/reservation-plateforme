@@ -28,6 +28,7 @@ public class UserService {
         User user = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        log.info("Current Working Directory: {}", System.getProperty("user.dir"));
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         log.info("Try to upload file to: {}", uploadPath);
 

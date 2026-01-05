@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { TranslatePipe } from '../pipes/translate.pipe';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
@@ -7,11 +8,12 @@ import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
+import { TranslationService } from '../services/translation.service';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [CommonModule, FormsModule, SidebarComponent, NavbarComponent],
+    imports: [CommonModule, FormsModule, SidebarComponent, NavbarComponent, TranslatePipe],
     templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
@@ -19,6 +21,7 @@ export class ProfileComponent implements OnInit {
     private userService = inject(UserService);
     private router = inject(Router);
     private toast = inject(ToastService);
+    private translationService = inject(TranslationService);
 
     userProfile = {
         firstName: '',
@@ -29,26 +32,17 @@ export class ProfileComponent implements OnInit {
         language: 'Français'
     };
 
+    selectedFile: File | null = null;
+
     onFileSelected(event: any) {
         const file: File = event.target.files[0];
         if (file) {
+            this.selectedFile = file;
             const reader = new FileReader();
             reader.onload = (e: any) => {
                 this.userProfile.profileImageUrl = e.target.result;
             };
             reader.readAsDataURL(file);
-
-            this.toast.info('Uploading image...');
-            this.userService.uploadProfileImage(file).subscribe({
-                next: (imageUrl) => {
-                    this.userProfile.profileImageUrl = imageUrl;
-                    this.toast.success('Profile image updated successfully');
-                },
-                error: (err) => {
-                    console.error('Upload failed', err);
-                    this.toast.error('Failed to upload image. Please try again.');
-                }
-            });
         }
     }
 
@@ -70,15 +64,34 @@ export class ProfileComponent implements OnInit {
                 this.toast.warning('Certaines informations sont manquantes. Veuillez vous reconnecter.');
             }
         }
-        const savedLang = localStorage.getItem('app_language');
-        if (savedLang) {
-            this.userProfile.language = savedLang;
-        }
+        this.userProfile.language = this.translationService.getCurrentLang();
+    }
+
+    onLanguageChange() {
+        this.translationService.setLanguage(this.userProfile.language);
     }
 
     onSave() {
         console.log('Saving profile:', this.userProfile);
-        localStorage.setItem('app_language', this.userProfile.language);
+        this.translationService.setLanguage(this.userProfile.language);
+
+        if (this.selectedFile) {
+            this.toast.info('Uploading image...');
+            this.userService.uploadProfileImage(this.selectedFile).subscribe({
+                next: (imageUrl) => {
+                    this.userProfile.profileImageUrl = imageUrl;
+                    this.authService.updateProfileImage(imageUrl);
+                    this.toast.success('Profile saved successfully');
+                    this.selectedFile = null;
+                },
+                error: (err) => {
+                    console.error('Upload failed', err);
+                    this.toast.error('Failed to upload image. Please try again.');
+                }
+            });
+        } else {
+            this.toast.success('Profile saved successfully');
+        }
     }
 
     onNavigate(route: string) {
