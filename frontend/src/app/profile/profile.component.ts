@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TranslatePipe } from '../pipes/translate.pipe';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
@@ -8,12 +7,11 @@ import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
-import { TranslationService } from '../services/translation.service';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [CommonModule, FormsModule, SidebarComponent, NavbarComponent, TranslatePipe],
+    imports: [CommonModule, FormsModule, SidebarComponent, NavbarComponent],
     templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
@@ -21,15 +19,13 @@ export class ProfileComponent implements OnInit {
     private userService = inject(UserService);
     private router = inject(Router);
     private toast = inject(ToastService);
-    private translationService = inject(TranslationService);
 
     userProfile = {
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
-        profileImageUrl: '',
-        language: 'Français'
+        profileImageUrl: ''
     };
 
     selectedFile: File | null = null;
@@ -45,8 +41,6 @@ export class ProfileComponent implements OnInit {
             reader.readAsDataURL(file);
         }
     }
-
-    languages = ['Français', 'English'];
 
     ngOnInit() {
         const user = this.authService.getUserDetails();
@@ -64,33 +58,27 @@ export class ProfileComponent implements OnInit {
                 this.toast.warning('Certaines informations sont manquantes. Veuillez vous reconnecter.');
             }
         }
-        this.userProfile.language = this.translationService.getCurrentLang();
-    }
-
-    onLanguageChange() {
-        this.translationService.setLanguage(this.userProfile.language);
     }
 
     onSave() {
         console.log('Saving profile:', this.userProfile);
-        this.translationService.setLanguage(this.userProfile.language);
 
         if (this.selectedFile) {
-            this.toast.info('Uploading image...');
+            this.toast.info('Téléchargement de l\'image...');
             this.userService.uploadProfileImage(this.selectedFile).subscribe({
                 next: (imageUrl) => {
                     this.userProfile.profileImageUrl = imageUrl;
                     this.authService.updateProfileImage(imageUrl);
-                    this.toast.success('Profile saved successfully');
+                    this.toast.success('Profil enregistré avec succès');
                     this.selectedFile = null;
                 },
                 error: (err) => {
                     console.error('Upload failed', err);
-                    this.toast.error('Failed to upload image. Please try again.');
+                    this.toast.error('Échec du téléchargement de l\'image. Veuillez réessayer.');
                 }
             });
         } else {
-            this.toast.success('Profile saved successfully');
+            this.toast.success('Profil enregistré avec succès');
         }
     }
 

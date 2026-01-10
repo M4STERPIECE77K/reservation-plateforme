@@ -12,7 +12,7 @@ npm start
 
 Cette commande utilise `concurrently` pour exécuter :
 1. Le frontend (Angular) sur [http://localhost:4200](http://localhost:4200)
-2. Le backend (Spring Boot) sur [http://localhost:8089](http://localhost:8089) (ou le port configuré)
+2. Le backend (Spring Boot) sur [http://localhost:9090]
 
 ### Autres commandes utiles
 

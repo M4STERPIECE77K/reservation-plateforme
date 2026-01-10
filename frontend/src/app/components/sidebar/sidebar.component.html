@@ -15,22 +15,22 @@
       <a routerLink="/app" routerLinkActive="bg-primary/10 text-primary" [routerLinkActiveOptions]="{exact: true}"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined fill text-[22px]">dashboard</span>
-        <p class="text-sm font-semibold leading-normal">{{ 'DASHBOARD' | translate }}</p>
+        <p class="text-sm font-semibold leading-normal">Tableau de Bord</p>
       </a>
       <a routerLink="/services" routerLinkActive="bg-primary/10 text-primary"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined text-[22px]">storefront</span>
-        <p class="text-sm font-medium leading-normal">{{ 'BROWSE_SERVICES' | translate }}</p>
+        <p class="text-sm font-medium leading-normal">Parcourir les Services</p>
       </a>
       <a routerLink="/bookings" routerLinkActive="bg-primary/10 text-primary"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-        <p class="text-sm font-medium leading-normal">{{ 'MY_BOOKINGS' | translate }}</p>
+        <p class="text-sm font-medium leading-normal">Mes Réservations</p>
       </a>
       <a routerLink="/reservations" routerLinkActive="bg-primary/10 text-primary"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-main dark:hover:text-gray-200 transition-colors cursor-pointer group">
         <span class="material-symbols-outlined text-[22px]">book_online</span>
-        <p class="text-sm font-medium leading-normal">{{ 'MY_RESERVATIONS' | translate }}</p>
+        <p class="text-sm font-medium leading-normal">Mes Rendez-vous</p>
       </a>
     </nav>
   </div>
@@ -56,12 +56,12 @@
         <button routerLink="/profile" (click)="isDropdownOpen = false"
           class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
           <span class="material-symbols-outlined text-[20px]">person</span>
-          {{ 'PROFILE_TITLE' | translate }} <!-- Using PROFILE_TITLE as 'Profile' -->
+          Mon Profil
         </button>
         <button (click)="openLogoutModal()"
           class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center gap-3 transition-colors">
           <span class="material-symbols-outlined text-[20px]">logout</span>
-          {{ 'LOGOUT' | translate }}
+          Déconnexion
         </button>
       </div>
     </div>
@@ -76,18 +76,18 @@
         class="size-12 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 flex items-center justify-center mx-auto mb-4">
         <span class="material-symbols-outlined text-[28px]">logout</span>
       </div>
-      <h3 class="text-lg font-bold text-text-main dark:text-white mb-2">{{ 'LOGOUT_CONFIRM_TITLE' | translate }}</h3>
+      <h3 class="text-lg font-bold text-text-main dark:text-white mb-2">Se déconnecter ?</h3>
       <p class="text-text-secondary dark:text-gray-400 text-sm mb-6">
-        {{ 'LOGOUT_CONFIRM_TEXT' | translate }}
+        Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder à votre compte.
       </p>
       <div class="flex gap-3">
         <button (click)="closeLogoutModal()"
           class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-text-main dark:text-white font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-          {{ 'CANCEL' | translate }}
+          Annuler
         </button>
         <button (click)="confirmLogout()"
           class="flex-1 px-4 py-2.5 rounded-lg bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20">
-          {{ 'LOGOUT' | translate }}
+          Déconnexion
         </button>
       </div>
     </div>
