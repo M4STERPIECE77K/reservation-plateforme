@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ServicesService, ServiceItem } from '../services/services.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
     selector: 'app-browse-services',
@@ -16,28 +17,41 @@ export class BrowseServicesComponent implements OnInit {
     private router = inject(Router);
     private authService = inject(AuthService);
     private servicesService = inject(ServicesService);
+    private toastService = inject(ToastService);
 
-    activeCategory = 'All Services';
-    services: ServiceItem[] = [];
+    // Utilisation de Signals pour une gestion d'état fluide
+    services = signal<ServiceItem[]>([]);
+    activeCategory = signal<string>('Tous les Services');
+
+    // Filtrage réactif automatique grâce à computed
+    filteredServices = computed(() => {
+        const s = this.services();
+        const cat = this.activeCategory();
+        
+        if (cat === 'Tous les Services') {
+            return s;
+        }
+        return s.filter(service => service.category?.toLowerCase() === cat.toLowerCase());
+    });
 
     categories = [
-        'All Services',
-        'Beauty',
-        'Health',
-        'Automotive',
-        'Wellness',
-        'Home'
+        'Tous les Services',
+        'Beauté',
+        'Santé',
+        'Automobile',
+        'Bien-être',
+        'Maison'
     ];
 
     ngOnInit() {
-        this.services = this.servicesService.getServices();
-    }
-
-    get filteredServices() {
-        if (this.activeCategory === 'All Services') {
-            return this.services;
-        }
-        return this.services.filter(s => s.category === this.activeCategory);
+        this.servicesService.getServices().subscribe({
+            next: (data) => {
+                this.services.set(data);
+            },
+            error: (err) => {
+                this.toastService.error("Erreur lors du chargement des services");
+            }
+        });
     }
 
     viewServiceDetail(id: number) {
@@ -58,6 +72,6 @@ export class BrowseServicesComponent implements OnInit {
     }
 
     setActiveCategory(category: string) {
-        this.activeCategory = category;
+        this.activeCategory.set(category);
     }
 }

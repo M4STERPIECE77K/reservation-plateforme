@@ -1,14 +1,12 @@
 import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { TranslatePipe } from '../../pipes/translate.pipe';
-
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -21,15 +19,21 @@ export class SidebarComponent implements OnInit {
   isDropdownOpen = false;
   isLogoutModalOpen = false;
 
-  userName = 'User Profile';
-  userEmail = 'user@example.com';
+  userName = 'Profil Utilisateur';
+  userEmail = 'utilisateur@exemple.com';
+  userProfileImage = '';
 
   ngOnInit() {
     const user = this.authService.getUserDetails();
     if (user) {
-      this.userName = user.firstName || 'User Profile';
+      this.userName = user.firstName || 'Profil Utilisateur';
       this.userEmail = user.sub || '';
+      this.userProfileImage = user.profileImageUrl || '';
     }
+
+    this.authService.profileImage$.subscribe(url => {
+      this.userProfileImage = url;
+    });
   }
 
   onNavigate(route: string) {

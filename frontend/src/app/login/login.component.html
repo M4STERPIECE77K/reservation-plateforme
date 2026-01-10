@@ -13,10 +13,10 @@
     <div class="p-6 md:p-8 flex flex-col">
       <div class="text-center mb-8">
         <h1 class="text-text-main dark:text-white text-[28px] md:text-[32px] font-bold leading-tight mb-2">
-          {{ authMode === 'signin' ? 'Welcome Back' : 'Create Account' }}
+          {{ authMode === 'signin' ? 'Bon retour' : 'Créer un compte' }}
         </h1>
         <p class="text-text-muted dark:text-gray-400 text-sm md:text-base">
-          {{ authMode === 'signin' ? 'Book your next appointment in seconds' : 'Join our professional community today'
+          {{ authMode === 'signin' ? 'Réservez votre prochain rendez-vous en quelques secondes' : 'Rejoignez notre communauté professionnelle dès aujourd\'hui'
           }}
         </p>
       </div>
@@ -26,7 +26,7 @@
             (change)="toggleAuthMode('signin')" />
           <div
             class="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-text-muted transition-all duration-200 peer-checked:bg-white peer-checked:dark:bg-[#1a2c29] peer-checked:text-text-main peer-checked:dark:text-white peer-checked:shadow-sm">
-            Sign In
+            Se connecter
           </div>
         </label>
         <label class="flex-1 cursor-pointer">
@@ -34,45 +34,44 @@
             (change)="toggleAuthMode('signup')" />
           <div
             class="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-text-muted transition-all duration-200 peer-checked:bg-white peer-checked:dark:bg-[#1a2c29] peer-checked:text-text-main peer-checked:dark:text-white peer-checked:shadow-sm">
-            Create Account
+            Créer un compte
           </div>
         </label>
       </div>
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-5">
         <div *ngIf="authMode === 'signup'" class="grid grid-cols-2 gap-4 animate-fade-in">
           <label class="flex flex-col gap-2">
-            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">First Name</span>
+            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Prénom</span>
             <input
               class="w-full h-12 px-4 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-              placeholder="John" required type="text" name="firstName" [(ngModel)]="model.firstName" />
+              placeholder="Jean" required type="text" name="firstName" [(ngModel)]="model.firstName" />
           </label>
           <label class="flex flex-col gap-2">
-            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Last Name</span>
+            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Nom</span>
             <input
               class="w-full h-12 px-4 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-              placeholder="Doe" required type="text" name="lastName" [(ngModel)]="model.lastName" />
+              placeholder="Dupont" required type="text" name="lastName" [(ngModel)]="model.lastName" />
           </label>
         </div>
 
         <label class="flex flex-col gap-2">
-          <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Email Address</span>
+          <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Adresse Email</span>
           <div class="relative flex items-center">
             <input
               class="w-full h-12 px-4 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-              placeholder="name@example.com" required type="email" name="email" [(ngModel)]="model.email" />
+              placeholder="nom@exemple.com" required type="email" name="email" [(ngModel)]="model.email" />
           </div>
         </label>
         <label class="flex flex-col gap-2">
           <div class="flex justify-between items-center">
-            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Password</span>
+            <span class="text-text-main dark:text-gray-200 text-sm font-semibold">Mot de passe</span>
             <a *ngIf="authMode === 'signin'" class="text-primary text-sm font-semibold hover:underline animate-fade-in"
-              href="#">Forgot
-              Password?</a>
+              href="#">Mot de passe oublié ?</a>
           </div>
           <div class="relative flex items-center">
             <input
               class="w-full h-12 pl-4 pr-12 rounded-lg bg-white dark:bg-[#132623] border border-[#dbe6e4] dark:border-[#2a403d] text-text-main dark:text-white text-base placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-              [placeholder]="authMode === 'signin' ? 'Enter your password' : 'Create a strong password'" required
+              [placeholder]="authMode === 'signin' ? 'Entrez votre mot de passe' : 'Créez un mot de passe robuste'" required
               [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="model.password" />
             <button
               class="absolute right-0 h-full px-4 text-text-muted hover:text-text-main dark:hover:text-white transition-colors flex items-center justify-center"
@@ -85,7 +84,7 @@
         <button [disabled]="isLoading"
           class="mt-2 w-full h-12 bg-primary hover:bg-primary/90 text-text-main text-base font-bold rounded-lg transition-all shadow-[0_4px_14px_rgba(17,212,180,0.3)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit">
-          <span *ngIf="!isLoading">{{ authMode === 'signin' ? 'Sign In' : 'Get Started' }}</span>
+          <span *ngIf="!isLoading">{{ authMode === 'signin' ? 'Se connecter' : 'Commencer' }}</span>
           <span *ngIf="isLoading" class="animate-spin rounded-full h-5 w-5 border-b-2 border-text-main"></span>
           <span *ngIf="!isLoading" class="material-symbols-outlined text-[20px]">arrow_forward</span>
         </button>
@@ -95,8 +94,7 @@
           <div class="w-full border-t border-[#f0f4f4] dark:border-[#2a403d]"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-4 bg-white dark:bg-surface-dark text-text-muted dark:text-gray-400 font-medium">Or continue
-            with</span>
+          <span class="px-4 bg-white dark:bg-surface-dark text-text-muted dark:text-gray-400 font-medium">Ou continuer avec</span>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-4">
@@ -130,10 +128,10 @@
         </button>
       </div>
       <p class="mt-8 text-center text-xs text-text-muted dark:text-gray-500">
-        By continuing, you agree to StyleBook's
-        <a class="underline hover:text-text-main dark:hover:text-gray-300" href="#">Terms of Service</a>
-        and
-        <a class="underline hover:text-text-main dark:hover:text-gray-300" href="#">Privacy Policy</a>.
+        En continuant, vous acceptez les
+        <a class="underline hover:text-text-main dark:hover:text-gray-300" href="#">Conditions d'utilisation</a>
+        et la
+        <a class="underline hover:text-text-main dark:hover:text-gray-300" href="#">Politique de confidentialité</a>.
       </p>
     </div>
     <div class="h-1.5 w-full bg-gradient-to-r from-primary via-[#4af0d4] to-primary"></div>

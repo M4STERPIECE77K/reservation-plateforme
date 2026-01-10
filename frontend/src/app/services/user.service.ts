@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
     private http = inject(HttpClient);
-    private apiUrl = 'http://localhost:8089/api/v1/users';
+    private apiUrl = 'http://localhost:9090/api/v1/users';
 
     uploadProfileImage(file: File): Observable<string> {
         const formData = new FormData();

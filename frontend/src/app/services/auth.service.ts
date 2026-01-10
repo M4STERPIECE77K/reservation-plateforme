@@ -13,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
     private http = inject(HttpClient);
-    private apiUrl = 'http://localhost:8089/api/v1/auth';
+    private apiUrl = 'http://localhost:9090/api/v1/auth';
 
     login(credentials: any): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.apiUrl}/authenticate`, credentials).pipe(

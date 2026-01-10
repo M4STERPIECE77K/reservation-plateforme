@@ -17,34 +17,35 @@ export class DashboardComponent implements OnInit {
 
   userName = 'User';
   userEmail = '';
+  user: any = null;
 
   ngOnInit() {
-    const user = this.authService.getUserDetails();
-    if (user) {
-      this.userName = user.firstName || 'User';
-      this.userEmail = user.sub || '';
+    this.user = this.authService.getUserDetails();
+    if (this.user) {
+      this.userName = this.user.firstName || 'User';
+      this.userEmail = this.user.sub || '';
     }
   }
 
   stats = [
     {
-      label: 'Upcoming',
+      label: 'À venir',
       value: '3',
-      unit: 'appointments',
+      unit: 'rendez-vous',
       icon: 'event',
       iconColor: 'text-primary'
     },
     {
-      label: 'Total Bookings',
+      label: 'Total réservations',
       value: '12',
-      unit: 'lifetime',
+      unit: 'historique',
       icon: 'history',
       iconColor: 'text-purple-600'
     },
     {
-      label: 'Loyalty Points',
+      label: 'Points fidélité',
       value: '450',
-      unit: 'pts available',
+      unit: 'pts disponibles',
       icon: 'loyalty',
       iconColor: 'text-green-600'
     }
@@ -53,27 +54,27 @@ export class DashboardComponent implements OnInit {
   upcomingReservations = [
     {
       id: 1,
-      provider: 'Dr. Emily Stone',
-      service: 'Dermatologist',
+      provider: 'Dr. Emilie Stone',
+      service: 'Dermatologue',
       icon: 'medical_services',
       iconBg: 'bg-blue-50 dark:bg-blue-900/20',
       iconColor: 'text-primary',
       serviceIcon: 'stethoscope',
-      dateTime: 'Sept 24, 10:00 AM',
-      status: 'Confirmed',
+      dateTime: '24 Sept, 10:00',
+      status: 'Confirmé',
       statusClass: 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30 text-green-700 dark:text-green-400',
       statusDot: 'bg-green-500'
     },
     {
       id: 2,
-      provider: 'Prestige Auto Garage',
-      service: 'Oil Change',
+      provider: 'Garage Prestige Auto',
+      service: 'Vidange',
       icon: 'car_repair',
       iconBg: 'bg-orange-50 dark:bg-orange-900/20',
       iconColor: 'text-orange-600',
       serviceIcon: 'oil_barrel',
-      dateTime: 'Oct 02, 2:00 PM',
-      status: 'Pending',
+      dateTime: '02 Oct, 14:00',
+      status: 'En attente',
       statusClass: 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-900/30 text-orange-700 dark:text-orange-400',
       statusDot: 'bg-orange-500'
     }

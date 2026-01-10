@@ -9,8 +9,8 @@ import { ThemeService } from '../../services/theme.service';
     templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
-    @Input() pageTitle = 'Dashboard';
-    @Input() searchPlaceholder = 'Search services, providers...';
+    @Input() pageTitle = 'Tableau de Bord';
+    @Input() searchPlaceholder = 'Rechercher des services, prestataires...';
 
     public themeService = inject(ThemeService);
 

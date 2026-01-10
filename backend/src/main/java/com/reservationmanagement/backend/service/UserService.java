@@ -47,7 +47,7 @@ public class UserService {
         log.info("Saving file to: {}", filePath);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        String fileUrl = "http://localhost:8089/api/v1/users/images/" + newFilename;
+        String fileUrl = "http://localhost:9090/api/v1/users/images/" + newFilename;
         user.setProfileImageUrl(fileUrl);
         repository.save(user);
 
