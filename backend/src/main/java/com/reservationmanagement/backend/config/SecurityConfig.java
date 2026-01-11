@@ -38,7 +38,8 @@ public class SecurityConfig {
                                                                 "/swagger-ui/**",
                                                                 "/swagger-ui.html",
                                                                 "/api/v1/users/images/**",
-                                                                "/api/v1/services/**")
+                                                                "/api/v1/services/**",
+                                                                "/api/v1/payments/webhook/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
