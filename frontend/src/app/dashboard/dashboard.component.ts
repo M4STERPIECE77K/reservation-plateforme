@@ -85,6 +85,8 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/app']);
     } else if (route === 'services') {
       this.router.navigate(['/services']);
+    } else if (route === 'bookings') {
+      this.router.navigate(['/bookings']);
     }
   }
 

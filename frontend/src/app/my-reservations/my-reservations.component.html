@@ -1,0 +1,130 @@
+<div
+    class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 min-h-screen flex overflow-hidden">
+    <app-sidebar (navigate)="onNavigate($event)" (logoutEvent)="onLogout()"></app-sidebar>
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <app-navbar [pageTitle]="'Mes Réservations'"></app-navbar>
+
+        <div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-4 md:p-8 lg:p-12">
+            <div class="max-w-5xl mx-auto w-full flex flex-col gap-8 animate-slide-up">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div class="flex flex-col gap-2">
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Mes
+                            Réservations</h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-base">Gérez vos rendez-vous à venir et votre
+                            historique de réservation.</p>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="border-b border-slate-200 dark:border-slate-800">
+                    <nav aria-label="Tabs" class="flex gap-8 overflow-x-auto pb-px">
+                        <button (click)="changeTab('UPCOMING')"
+                            [ngClass]="currentTab() === 'UPCOMING' ? 'border-b-2 border-primary text-primary font-bold' : 'border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 font-medium'"
+                            class="px-1 py-4 text-sm flex items-center gap-2 transition-all">
+                            <span>À venir</span>
+                            <span
+                                class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">{{ upcomingCount() }}</span>
+                        </button>
+                        <button (click)="changeTab('PENDING')" 
+                            [ngClass]="currentTab() === 'PENDING' ? 'border-b-2 border-primary text-primary font-bold' : 'border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 font-medium'"
+                            class="px-1 py-4 text-sm transition-all">
+                            En attente
+                        </button>
+                        <button (click)="changeTab('HISTORY')" 
+                            [ngClass]="currentTab() === 'HISTORY' ? 'border-b-2 border-primary text-primary font-bold' : 'border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 font-medium'"
+                            class="px-1 py-4 text-sm transition-all">
+                            Historique
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Content Grid (Combined Card) -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+                    <!-- Loading State -->
+                    <div *ngIf="isLoading()" class="flex justify-center py-20">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div *ngIf="!isLoading() && paginatedReservations().length === 0"
+                        class="text-center py-20 animate-fade-in">
+                        <span
+                            class="material-symbols-outlined text-6xl text-slate-300 dark:text-slate-700 mb-4">event_busy</span>
+                        <p class="text-slate-500 dark:text-slate-400">Aucune réservation trouvée dans cette catégorie.</p>
+                        <button routerLink="/services" class="mt-4 text-primary font-bold hover:underline">Parcourir les
+                            services</button>
+                    </div>
+                    <div class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <div *ngFor="let res of paginatedReservations(); let last = last"
+                            class="group p-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all flex flex-col md:flex-row gap-6 animate-fade-in">
+                            <div class="flex flex-col flex-1 gap-3 order-2 md:order-1">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center justify-between">
+                                        <span [ngClass]="{
+                                            'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800': res.status === 'COMPLETED',
+                                            'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-100 dark:border-amber-800': res.status === 'PENDING',
+                                            'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700': res.status === 'FAILED'
+                                        }" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border">
+                                            <span [ngClass]="{
+                                                'bg-emerald-500': res.status === 'COMPLETED',
+                                                'bg-amber-500 animate-pulse': res.status === 'PENDING',
+                                                'bg-slate-500': res.status === 'FAILED'
+                                            }" class="size-1.5 rounded-full"></span>
+                                            {{ res.status === 'COMPLETED' ? 'Confirmé' : (res.status === 'PENDING' ? 'En attente' : 'Annulé/Échoué') }}
+                                        </span>
+                                        <span class="text-xs font-medium text-slate-400">{{ res.createdAt | date:'short' }}</span>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">{{ res.service.title }}</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 font-medium">{{ res.service.providerName }}</p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mt-3 text-sm text-slate-500 dark:text-slate-400">
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px] text-slate-400">calendar_today</span>
+                                            <span>{{ res.createdAt | date:'longDate' }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px] text-slate-400">schedule</span>
+                                            <span>{{ res.createdAt | date:'shortTime' }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-[18px] text-slate-400">location_on</span>
+                                            <span class="truncate">{{ res.service.location }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 font-bold text-primary">
+                                            <span class="material-symbols-outlined text-[18px]">payments</span>
+                                            <span>{{ res.amount | number:'1.0-0' }} {{ res.currency }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 flex items-center gap-3">
+                                    <button class="flex-1 md:flex-none items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Modifier</button>
+                                    <button *ngIf="res.status === 'PENDING'" class="flex-1 md:flex-none items-center justify-center gap-2 px-4 py-2 rounded-lg bg-transparent border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:border-red-500 transition-colors text-xs font-semibold">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div *ngIf="totalPages() > 1" class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        <p class="text-sm text-slate-500 dark:text-slate-400">
+                            Page {{ currentPage() }} sur {{ totalPages() }}
+                        </p>
+                        <div class="flex gap-2">
+                            <button (click)="setPage(currentPage() - 1)" 
+                                    [disabled]="currentPage() === 1"
+                                    class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white dark:hover:bg-slate-800 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                            </button>
+                            <button (click)="setPage(currentPage() + 1)" 
+                                    [disabled]="currentPage() === totalPages()"
+                                    class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white dark:hover:bg-slate-800 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Empty Space filler for scrolling -->
+                <div class="h-12"></div>
+            </div>
+        </div>
+    </main>
+</div>

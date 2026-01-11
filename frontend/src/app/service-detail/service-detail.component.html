@@ -130,7 +130,7 @@
                     <!-- Right Column: Initial view OR Booking Flow -->
                     <div class="lg:col-span-1 relative">
                         <div class="sticky top-24 space-y-4">
-                            <div *ngIf="!isBooking()" class="border border-slate-200 dark:border-slate-800 rounded-2xl p-6 bg-white dark:bg-surface-dark shadow-xl shadow-slate-200/50 dark:shadow-none animate-fade-in">
+                            <div *ngIf="!isBooking() && !isPayment()" class="border border-slate-200 dark:border-slate-800 rounded-2xl p-6 bg-white dark:bg-surface-dark shadow-xl shadow-slate-200/50 dark:shadow-none animate-fade-in">
                                 <div class="flex items-center justify-between mb-6">
                                     <div class="flex flex-col">
                                         <span class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">À partir de</span>
@@ -145,7 +145,7 @@
                                     Réserver maintenant
                                 </button>
                             </div>
-                            <div *ngIf="!isBooking()" class="info-bb bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex flex-col gap-3 mt-4 border border-slate-100 dark:border-slate-800/50">
+                            <div *ngIf="!isBooking() && !isPayment()" class="info-bb bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex flex-col gap-3 mt-4 border border-slate-100 dark:border-slate-800/50">
                                     <div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
                                         <span class="material-symbols-outlined text-[20px] text-slate-400">event_busy</span>
                                         <span>Annulation gratuite jusqu'à 24h</span>
@@ -164,10 +164,10 @@
                                             <span class="text-3xl font-bold text-slate-900 dark:text-white">{{ s.price }}</span>
                                             <span class="text-slate-500 dark:text-slate-400 text-sm">/ session</span>
                                         </div>
-                                        <div *ngIf="!isSelectedDateSunday()" class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
+                                        <div *ngIf="selectedDate() && !isSelectedDateSunday()" class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
                                             Disponible aujourd'hui
                                         </div>
-                                        <div *ngIf="isSelectedDateSunday()" class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
+                                        <div *ngIf="selectedDate() && isSelectedDateSunday()" class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
                                             Fermé
                                         </div>
                                     </div>
@@ -189,15 +189,7 @@
                                                 <div>Di</div><div>Lu</div><div>Ma</div><div>Me</div><div>Je</div><div>Ve</div><div>Sa</div>
                                             </div>
                                             <div class="grid grid-cols-7 gap-1 text-center text-sm">
-                                                <div *ngFor="let day of calendarDays()" 
-                                                     (click)="selectDate(day)"
-                                                     [ngClass]="{
-                                                         'text-slate-300 dark:text-slate-600': !isCurrentMonth(day),
-                                                         'bg-primary text-white font-medium shadow-sm': isDateSelected(day),
-                                                         'hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer': isCurrentMonth(day) && !isDateSelected(day) && isDateSelectable(day),
-                                                         'text-slate-400 cursor-not-allowed': !isDateSelectable(day) && isCurrentMonth(day)
-                                                     }"
-                                                     class="py-1 rounded transition-colors">
+                                                <div *ngFor="let day of calendarDays()" (click)="selectDate(day)" [ngClass]="{ 'text-slate-300 dark:text-slate-600': !isCurrentMonth(day), 'bg-primary text-white font-medium shadow-sm': isDateSelected(day), 'hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer': isCurrentMonth(day) && !isDateSelected(day) && isDateSelectable(day), 'text-slate-400 cursor-not-allowed': !isDateSelectable(day) && isCurrentMonth(day) }" class="py-1 rounded transition-colors">
                                                     {{ day?.getDate() }}
                                                 </div>
                                             </div>
@@ -216,12 +208,10 @@
                                             <button (click)="selectTime('16:00')" [ngClass]="selectedTime() === '16:00' ? 'bg-primary text-white border-primary shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary'" class="py-2 px-1 text-sm border border-slate-200 dark:border-slate-700 rounded-lg transition-all">16:00</button>
                                         </div>
                                     </div>
-                                    
-                                    <!-- Actions -->
                                     <div class="space-y-3">
                                         <button (click)="confirmBooking()"
                                             class="w-full bg-primary hover:bg-primary/90 text-text-main font-bold py-3.5 rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2">
-                                            <span>Confirmer la réservation</span>
+                                            <span>Passer au paiement</span>
                                             <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
                                         </button>
                                         <div (click)="toggleBooking()" class="text-center">
@@ -230,16 +220,163 @@
                                         <p class="text-xs text-center text-slate-500 dark:text-slate-400">Vous ne serez pas encore débité</p>
                                     </div>
                                 </div>
-                                
+                            </div>
+
+                            <!-- Payment Flow View -->
+                            <div *ngIf="isPayment()" class="animate-slide-up-subtle">
+                                <form (ngSubmit)="processPayment()" #paymentForm="ngForm" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 overflow-hidden">
+                                    <div class="flex items-baseline justify-between gap-3 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+                                        <div>
+                                            <span class="text-3xl font-bold text-slate-900 dark:text-white">{{ s.price }}</span>
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm">/ session</span>
+                                        </div>
+                                        <div class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
+                                            Paiement sécurisé
+                                        </div>
+                                    </div>
+
+                                    <!-- Reservation Summary -->
+                                    <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                                        <h4 class="font-semibold text-slate-900 dark:text-white mb-3">Récapitulatif de réservation</h4>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-slate-600 dark:text-slate-300">Date:</span>
+                                                <span class="font-medium text-slate-900 dark:text-white">{{ selectedDate()?.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-slate-600 dark:text-slate-300">Heure:</span>
+                                                <span class="font-medium text-slate-900 dark:text-white">{{ selectedTime() }}</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-slate-600 dark:text-slate-300">Service:</span>
+                                                <span class="font-medium text-slate-900 dark:text-white">{{ s.title }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">Choisir un mode de paiement</label>
+
+                                        <!-- Orange Money -->
+                                        <div (click)="selectPaymentMethod('ORANGE_MONEY')"
+                                             [ngClass]="selectedPaymentMethod() === 'ORANGE_MONEY' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-700'"
+                                             class="border-2 rounded-xl p-4 cursor-pointer transition-all hover:border-primary mb-3">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                                                    <span class="text-2xl">📱</span>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-slate-900 dark:text-white">Orange Money</h3>
+                                                    <p class="text-sm text-slate-500 dark:text-slate-400">Paiement mobile rapide et sécurisé</p>
+                                                </div>
+                                                <div *ngIf="selectedPaymentMethod() === 'ORANGE_MONEY'"
+                                                     class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                                                    <span class="material-symbols-outlined text-white text-[16px]">check</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Orange Money Form -->
+                                            <div *ngIf="selectedPaymentMethod() === 'ORANGE_MONEY'" 
+                                                 (click)="$event.stopPropagation()"
+                                                 class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Numéro Orange Money</label>
+                                                <input type="tel" [(ngModel)]="phoneNumber" 
+                                                       name="phoneNumber"
+                                                       placeholder="034 XX XXX XX" 
+                                                       class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            </div>
+                                        </div>
+
+                                        <!-- Stripe (Visa/Mastercard) -->
+                                        <div (click)="selectPaymentMethod('STRIPE')"
+                                             [ngClass]="selectedPaymentMethod() === 'STRIPE' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-700'"
+                                             class="border-2 rounded-xl p-4 cursor-pointer transition-all hover:border-primary">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                                    <span class="text-2xl">💳</span>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-slate-900 dark:text-white">Carte Bancaire</h3>
+                                                    <p class="text-sm text-slate-500 dark:text-slate-400">Visa, Mastercard</p>
+                                                </div>
+                                                <div *ngIf="selectedPaymentMethod() === 'STRIPE'"
+                                                     class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                                                    <span class="material-symbols-outlined text-white text-[16px]">check</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Stripe Form -->
+                                            <div *ngIf="selectedPaymentMethod() === 'STRIPE'" 
+                                                 (click)="$event.stopPropagation()"
+                                                 class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Nom du titulaire</label>
+                                                    <input type="text" [(ngModel)]="cardholderName" 
+                                                           name="cardholderName"
+                                                           placeholder="JEAN DUPONT" 
+                                                           [disabled]="showStripeCardForm()" 
+                                                           class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                </div>
+
+                                                <!-- Card Details Fields (Shown after first click) -->
+                                                <div *ngIf="showStripeCardForm()" class="space-y-3 animate-fade-in">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Numéro de carte</label>
+                                                        <input type="text" [(ngModel)]="cardNumber" 
+                                                               name="cardNumber"
+                                                               placeholder="4242 4242 4242 4242" 
+                                                               class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                    </div>
+                                                    <div class="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Expiration (MM/AA)</label>
+                                                            <input type="text" [(ngModel)]="expiryDate" 
+                                                                   name="expiryDate"
+                                                                   placeholder="12/26" 
+                                                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">CVC</label>
+                                                            <input type="text" [(ngModel)]="cvv" 
+                                                                   name="cvv"
+                                                                   placeholder="123" 
+                                                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="!showStripeCardForm()" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                                                    <p class="text-sm text-blue-800 dark:text-blue-200">
+                                                        <span class="material-symbols-outlined text-[16px] align-middle mr-1">info</span>
+                                                        Cliquez sur procéder pour entrer vos informations de carte.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Payment Actions -->
+                                    <div class="space-y-3">
+                                        <button type="submit"
+                                                [disabled]="isProcessing()"
+                                                class="w-full bg-primary hover:bg-primary/90 disabled:bg-slate-300 disabled:cursor-not-allowed text-text-main font-bold py-3.5 rounded-lg shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2">
+                                            <span *ngIf="!isProcessing()">Procéder au paiement</span>
+                                            <span *ngIf="isProcessing()">Traitement en cours...</span>
+                                            <span *ngIf="!isProcessing()" class="material-symbols-outlined text-[20px]">payment</span>
+                                        </button>
+                                        <div (click)="cancelPayment()" class="text-center">
+                                            <button type="button" class="text-sm text-slate-500 hover:text-primary transition-colors">Retour à la réservation</button>
+                                        </div>
+                                    </div>
+                                </form>
+
                                 <!-- Trust Signals Box -->
                                 <div class="info-bb bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex flex-col gap-3 mt-4 border border-slate-100 dark:border-slate-800/50">
                                     <div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                                        <span class="material-symbols-outlined text-[20px] text-slate-400">event_busy</span>
-                                        <span>Annulation gratuite jusqu'à 24h</span>
+                                        <span class="material-symbols-outlined text-[20px] text-slate-400">security</span>
+                                        <span>Paiement 100% sécurisé</span>
                                     </div>
                                     <div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                                        <span class="material-symbols-outlined text-[20px] text-slate-400">instant_mix</span>
-                                        <span>Confirmation instantanée</span>
+                                        <span class="material-symbols-outlined text-[20px] text-slate-400">verified</span>
+                                        <span>Données cryptées SSL</span>
                                     </div>
                                 </div>
                             </div>
