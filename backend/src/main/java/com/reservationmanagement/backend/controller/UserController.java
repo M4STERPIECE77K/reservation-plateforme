@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -38,7 +39,7 @@ public class UserController {
     @GetMapping("/images/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
         Path file = Paths.get(uploadDir).resolve(filename);
-        Resource resource = new UrlResource(file.toUri());
+        Resource resource = new UrlResource(Objects.requireNonNull(file.toUri()));
         if (resource.exists() || resource.isReadable()) {
             String contentType = "image/jpeg";
             if (filename.toLowerCase().endsWith(".png")) {

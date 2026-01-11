@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @RequiredArgsConstructor
@@ -107,7 +108,7 @@ public class DataInitializer implements CommandLineRunner {
                             .providerName("Plomberie Fiable")
                             .isVerified(true)
                             .build());
-            serviceRepository.saveAll(initialServices);
+            serviceRepository.saveAll(Objects.requireNonNull(initialServices));
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -28,16 +29,10 @@ public class PaymentService {
     @Transactional
     public PaymentResponse initiatePayment(String userEmail, PaymentRequest request) {
         log.info("Initiating payment for user: {}, method: {}", userEmail, request.getPaymentMethod());
-
-        // Récupérer l'utilisateur
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // Récupérer le service
-        com.reservationmanagement.backend.entity.Service service = serviceRepository.findById(request.getServiceId())
+        com.reservationmanagement.backend.entity.Service service = serviceRepository.findById(Objects.requireNonNull(request.getServiceId()))
                 .orElseThrow(() -> new RuntimeException("Service not found"));
-
-        // Créer l'entité Payment
         Payment payment = Payment.builder()
                 .user(user)
                 .service(service)
@@ -46,11 +41,8 @@ public class PaymentService {
                 .paymentMethod(request.getPaymentMethod())
                 .status(PaymentStatus.PENDING)
                 .build();
-
-        // Sauvegarder le paiement
         payment = paymentRepository.save(payment);
 
-        // Router vers le bon service de paiement
         PaymentResponse response;
         switch (request.getPaymentMethod()) {
             case ORANGE_MONEY:
@@ -63,7 +55,6 @@ public class PaymentService {
                 throw new IllegalArgumentException("Unsupported payment method: " + request.getPaymentMethod());
         }
 
-        // Mettre à jour le paiement avec les infos du provider
         paymentRepository.save(payment);
 
         return response;
@@ -72,7 +63,7 @@ public class PaymentService {
     public List<Payment> getUserPayments(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return paymentRepository.findByUserId(user.getId());
+        return paymentRepository.findByUserId(Objects.requireNonNull(user.getId()));
     }
 
     public Payment getPaymentById(Long paymentId) {
@@ -82,7 +73,7 @@ public class PaymentService {
 
     @Transactional
     public void updatePaymentStatus(String transactionId, PaymentStatus status) {
-        Payment payment = paymentRepository.findByTransactionId(transactionId)
+        Payment payment = paymentRepository.findByTransactionId(Objects.requireNonNull(transactionId))
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
         payment.setStatus(status);

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Objects;
+
 class JwtServiceTest {
 
     private JwtService jwtService;
@@ -13,14 +15,13 @@ class JwtServiceTest {
     @BeforeEach
     void setUp() {
         jwtService = new JwtService();
-        ReflectionTestUtils.setField(jwtService, "secretKey",
+        ReflectionTestUtils.setField(Objects.requireNonNull(jwtService), "secretKey",
                 "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970");
-        ReflectionTestUtils.setField(jwtService, "jwtExpiration", 604800000L);
+        ReflectionTestUtils.setField(Objects.requireNonNull(jwtService), "jwtExpiration", 604800000L);
     }
 
     @Test
     void generateToken_ShouldIncludeUserClaims() {
-        // Arrange
         User user = User.builder()
                 .firstName("John")
                 .lastName("Doe")

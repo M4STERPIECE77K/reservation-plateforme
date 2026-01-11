@@ -24,6 +24,9 @@ public class ServiceController {
 
     @GetMapping("/{id}")
     public Service getServiceById(@PathVariable Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
         return serviceRepository.findById(id).orElseThrow(() -> new RuntimeException("Service not found"));
     }
 }

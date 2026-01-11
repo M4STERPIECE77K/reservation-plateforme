@@ -20,7 +20,6 @@ public class AuthenticationService {
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
 
-        @SuppressWarnings("null")
         public AuthenticationResponse register(RegisterRequest request) {
                 if (repository.findByEmail(request.getEmail()).isPresent()) {
                         throw new RuntimeException("Cet email est déjà utilisé");
@@ -39,7 +38,6 @@ public class AuthenticationService {
                                 .build();
         }
 
-        @SuppressWarnings("null")
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
