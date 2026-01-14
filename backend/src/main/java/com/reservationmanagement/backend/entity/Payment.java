@@ -32,23 +32,23 @@ public class Payment {
     private Double amount;
 
     @Column(nullable = false)
-    private String currency; // "MGA" pour Ariary
+    private String currency;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentMethod paymentMethod; // ORANGE_MONEY, STRIPE
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status; // PENDING, COMPLETED, FAILED, REFUNDED
+    private PaymentStatus status;
 
     @Column(unique = true)
-    private String transactionId; // ID de transaction du provider
+    private String transactionId;
 
-    private String providerReference; // Référence du provider (Orange/Stripe)
+    private String providerReference;
 
     @Column(columnDefinition = "TEXT")
-    private String metadata; // JSON pour stocker des infos supplémentaires
+    private String metadata;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

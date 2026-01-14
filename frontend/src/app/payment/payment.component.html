@@ -1,0 +1,149 @@
+<div class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 min-h-screen flex overflow-hidden">
+    <app-sidebar (navigate)="onNavigate($event)" (logoutEvent)="onLogout()"></app-sidebar>
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <app-navbar [pageTitle]="'Paiement'"></app-navbar>
+        <div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-8 animate-slide-up">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Breadcrumb -->
+                <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
+                    <a class="hover:text-primary transition-colors cursor-pointer" routerLink="/services">Services</a>
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    <span class="text-text-main dark:text-white font-medium">Paiement</span>
+                </div>
+
+                <div *ngIf="service()" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left: Payment Methods -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white dark:bg-surface-dark rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Choisir un mode de paiement</h2>
+                            
+                            <!-- Payment Method Selection -->
+                            <div class="space-y-4 mb-6">
+                                <!-- Orange Money -->
+                                <div (click)="selectPaymentMethod('ORANGE_MONEY')"
+                                     [ngClass]="selectedPaymentMethod() === 'ORANGE_MONEY' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-700'"
+                                     class="border-2 rounded-xl p-4 cursor-pointer transition-all hover:border-primary">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                                            <span class="text-2xl">📱</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-slate-900 dark:text-white">Orange Money</h3>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">Paiement mobile rapide et sécurisé</p>
+                                        </div>
+                                        <div *ngIf="selectedPaymentMethod() === 'ORANGE_MONEY'" 
+                                             class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-[16px]">check</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Orange Money Form -->
+                                    <div *ngIf="selectedPaymentMethod() === 'ORANGE_MONEY'" class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Numéro Orange Money</label>
+                                        <input type="tel" 
+                                               [(ngModel)]="phoneNumber"
+                                               placeholder="034 XX XXX XX"
+                                               class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    </div>
+                                </div>
+
+                                <!-- Stripe (Visa/Mastercard) -->
+                                <div (click)="selectPaymentMethod('STRIPE')"
+                                     [ngClass]="selectedPaymentMethod() === 'STRIPE' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-700'"
+                                     class="border-2 rounded-xl p-4 cursor-pointer transition-all hover:border-primary">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                            <span class="text-2xl">💳</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-slate-900 dark:text-white">Carte Bancaire</h3>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">Visa, Mastercard</p>
+                                        </div>
+                                        <div *ngIf="selectedPaymentMethod() === 'STRIPE'" 
+                                             class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-[16px]">check</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Stripe Form -->
+                                    <div *ngIf="selectedPaymentMethod() === 'STRIPE'" class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Nom du titulaire</label>
+                                            <input type="text" 
+                                                   [(ngModel)]="cardholderName"
+                                                   placeholder="JEAN DUPONT"
+                                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        </div>
+                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                                            <p class="text-sm text-blue-800 dark:text-blue-200">
+                                                <span class="material-symbols-outlined text-[16px] align-middle mr-1">info</span>
+                                                Vous serez redirigé vers une page sécurisée pour entrer vos informations de carte.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Button -->
+                            <button (click)="processPayment()"
+                                    [disabled]="isProcessing()"
+                                    class="w-full bg-primary hover:bg-primary/90 disabled:bg-slate-300 disabled:cursor-not-allowed text-text-main font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/25 active:scale-[0.98] flex items-center justify-center gap-2">
+                                <span *ngIf="!isProcessing()">Procéder au paiement</span>
+                                <span *ngIf="isProcessing()">Traitement en cours...</span>
+                                <span *ngIf="!isProcessing()" class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1">
+                        <div class="bg-white dark:bg-surface-dark rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Récapitulatif</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex gap-3">
+                                    <img [src]="service()!.image" 
+                                         alt="Service" 
+                                         class="w-20 h-20 rounded-lg object-cover">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-slate-900 dark:text-white text-sm">{{ service()!.title }}</h4>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ service()!.duration }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-slate-200 dark:border-slate-700 pt-4 space-y-2">
+                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                        <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                        <span>{{ selectedDate()?.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                        <span class="material-symbols-outlined text-[18px]">schedule</span>
+                                        <span>{{ selectedTime() }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-slate-600 dark:text-slate-400">Sous-total</span>
+                                        <span class="font-semibold text-slate-900 dark:text-white">{{ service()!.price }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm text-slate-500 dark:text-slate-400">
+                                        <span>Frais de service</span>
+                                        <span>Gratuit</span>
+                                    </div>
+                                </div>
+
+                                <div class="border-t-2 border-slate-300 dark:border-slate-600 pt-4">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-bold text-slate-900 dark:text-white">Total</span>
+                                        <span class="text-2xl font-black text-primary">{{ service()!.price }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
